@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>บันทึกโน๊ตดนตรีไทย</title>
+    <style>
+   /* CSS Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            /*display: flex; /* ลบตรงนี้ออกจะไปบนสุด */
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            text-align: center;
+            background-color: #ffffff;
+            padding: 20px;/* ความกว้างของส่วนบน */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+			
+        }
+        h2 {
+            margin-bottom: 20px;
+        }
+ 
+        .orange-btn {
+
+            text-align: center;
+            text-decoration: none;
+            flex-direction: column;
+            justify-content: flex-start; /* จัดตำแหน่งข้อความให้อยู่ด้านบน */
+            align-items: center;
+            margin: 0px; /* เพิ่มระยะห่างระหว่างปุ่ม */
+            transition: background-color 0.3s;
+            cursor: pointer;
+            background-color: orange;
+            color: white;
+            width: 30px; /* กำหนดความกว้างของปุ่ม */
+            height: 120px; /* กำหนดความสูงของปุ่ม */
+            border: none;
+            font-size: 18px;
+            border-radius: 12px; /* เพิ่มความโค้งมนของมุม */
+            box-sizing: border-box; /* รวม padding ในขนาดปุ่ม */
+            /*padding-top: 5px; /* เพิ่ม padding ด้านบน */
+
+    
+        }
+        .orange-btn:active {
+            background-color: darkorange;
+        }
+}
+		.orange-btn:active {
+            background-color: #ccc;
+
+        }
+        .btn {
+            padding: 7px 15px;
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 20px;
+        }
+		.btnpom {
+            padding: 10px 150px;
+            border: none;
+            color: black;
+            text-align: center;
+            text-decoration: none;
+            font-size: 20px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 80px;
+        }
+
+        .btn-play {
+            background-color: #4CAF50;
+        }
+        .btn-stop {
+            background-color: #f44336;
+        }
+        .btn-clear {
+            background-color: #ff9800;
+        }
+        .btn-add-row {
+            background-color: #2196F3;
+        }
+        .btn-delete-row {
+            background-color: #f44336;
+        }
+
+
+
+table {
+    border-collapse: collapse; /* กำหนดให้เส้นขอบของเซลล์ถูกผสมรวมกัน */
+    border: 0px solid #ddd; /* เส้นขอบของตาราง */
+    width: 90%; /* กำหนดความกว้างของตาราง */
+    border-left-width: 1px;   /* ขนาดขอบด้านซ้าย */
+    border-bottom-width: 1px; /* ขนาดขอบด้านล่าง */
+    border-right-width: 1px;  /* ขนาดขอบด้านขวา */
+    border-top-width: 0px;    /* ขนาดขอบด้านบน */
+    border-style: solid;      /* กำหนดรูปแบบของเส้นกรอบ */
+    border-color: black;      /* กำหนดสีของเส้นกรอบ */
+
+
+
+}
+
+td, th {
+    border: 0px solid #ddd; /* กำหนดเส้นขอบสำหรับเซลล์ */
+    padding: 0px; /* กำหนดระยะห่างของข้อมูลภายในเซลล์ */
+    text-align: center; /* กำหนดการจัดวางข้อความภายในเซลล์ */
+}
+
+th {
+    background-color: #f2f2f2; /* สีพื้นหลังของหัวตาราง */
+    color: black; /* สีข้อความของหัวตาราง */
+}
+
+        td.note-cell {
+			width: 28px; /* กำหนดความกว้างของเซลล์ */
+			height: 50px; /* กำหนดความสูงของเซลล์ */
+			font-size: 20px; /* กำหนดขนาดฟอนต์ของข้อความในเซลล์ */
+			border-top: 0px solid black; /* ขอบซ้าย 2px */
+            border-left: 0px solid black; /* ขอบซ้าย 2px */
+			border-bottom: 0px solid black; /* ขอบล่าง 3px */
+			border-right: 0px solid black; /* ขอบขวา 1px */
+
+        }
+		
+
+        tr:first-child td,
+        tr td:first-child {
+            border-left: none;
+        }
+        tr:last-child td,
+        tr td:last-child {
+            border-right: none;
+        }
+.group1 td {
+    border-top: 1px solid black;
+}
+
+.group1:last-child td {
+    border-bottom: 1px solid black;
+}
+       /* เพิ่มลูกเล่น onmouseover และ onmouseout */
+        .note-cell:hover {
+            background-color: #ddd; /* เปลี่ยนสีพื้นหลังเมื่อเมาส์ไปที่เซลล์ */
+            cursor: pointer; /* เปลี่ยนเคอร์เซอร์เป็นตัวชี้ */
+        }
+
+        .note-cell:not(:empty):hover {
+            background-color: #ffcc00; /* เปลี่ยนสีพื้นหลังเมื่อเมาส์ไปที่เซลล์ที่มีข้อความ */
+        }
+/* เส้นกรอบหรือไฮไลต์ของโน๊ตที่กำลังเล่น */
+.playing {
+    box-shadow: 
+        0px 0 0 red, /* เส้นกรอบทางซ้าย */
+        0px 0 0 red, /* เส้นกรอบทางขวา */
+        0 0px 0 red, /* เส้นกรอบด้านล่าง */
+        0 0px 0 red; /* เส้นกรอบด้านบน */
+}
+
+
+.playing::after {
+    content: ''; /* เพิ่มเนื้อหาสำหรับ pseudo-element */
+    display: block; /* ทำให้ pseudo-element เป็นบล็อก */
+    border-bottom: none; /* กำหนดเส้นล่างของ pseudo-element เป็น none */
+}
+
+.note-cell.playing {
+    background-color: #ffcc00; /* สีของแถบสีข้างล่างขณะเล่น */
+}
+        .note {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1px; /* ปิดการใช้งานระยะห่างระหว่างปุ่ม */
+            padding: 20px;
+            border: 0px solid #ccc;
+            border-radius: 15px;
+            justify-content: center;
+            align-items: center;
+        }
+
+		.btnpom:hover {
+    transform: scale(1.1); /* เพิ่มขนาดของปุ่มเมื่อโฮเวอร์ */
+}
+
+/* เส้นขอบเฉพาะแถวบนสุด */
+#myTable tr:first-child {
+    border: 1px solid black; /* เส้นขอบแถวบนสุด */
+}
+
+/* แถวอื่นๆ ไม่มีเส้นขอบ */
+#myTable tr:not(:first-child) {
+    border: none; /* ไม่มีเส้นขอบ */
+}
+
+/* ตั้งค่าความกว้างของเซลล์ทั้งหมดในตาราง */
+.note-cell {
+    width: 50px; /* ความกว้างคงที่ */
+    padding: 8px;
+    text-align: center; /* จัดข้อความให้อยู่ตรงกลาง */
+    border: 1px solid #ccc; /* เส้นขอบ (ถ้าต้องการ) */
+}
+
+.last-cell {
+    white-space: nowrap; /* ป้องกันข้อความตัดคำ */
+    text-align: center; /* ข้อความอยู่กึ่งกลาง */
+    font-weight: bold; /* ข้อความตัวหนา (ถ้าต้องการ) */
+    padding: 8px;
+}
+.single-cell {
+    text-align: right; /* จัดข้อความให้อยู่ทางขวา */
+    font-weight: bold; /* ข้อความตัวหนา */
+    padding: 10px; /* ระยะห่างในเซลล์ */
+    background-color: #f9f9f9; /* สีพื้นหลัง (ถ้าต้องการ) */
+    border: 1px solid #ccc; /* เส้นขอบ (ถ้าต้องการ) */
+}
+
+   </style>
+</head>
+<body>
+    <div class="container">
+        <h2>โน๊ตดนตรีไทย</h2>
+		<br>
+		 <input type="text" name="firstname" value="กดตรงนี้พิมพ์ชื่อเพลง" class="btnpom">
+ 
+<center>
+        <table id="myTable">
+            <tr class="group1">
+                <td class="note-cell" onclick="selectCell(this)">-</td>
+                <td class="note-cell" onclick="selectCell(this)">-</td>
+                <td class="note-cell" onclick="selectCell(this)">-</td>
+                <td class="note-cell" onclick="selectCell(this)">-</td>
+                <td>|</td>
+                <td class="note-cell" onclick="selectCell(this)">-</td>
+                <td class="note-cell" onclick="selectCell(this)">-</td>
+                <td class="note-cell" onclick="selectCell(this)">-</td>
+                <td class="note-cell" onclick="selectCell(this)">-</td>
+                <td>|</td>
+                <td class="note-cell" onclick="selectCell(this)">-</td>
+                <td class="note-cell" onclick="selectCell(this)">-</td>
+                <td class="note-cell" onclick="selectCell(this)">-</td>
+                <td class="note-cell" onclick="selectCell(this)">-</td>
+                <td>|</td>
+                <td class="note-cell" onclick="selectCell(this)">-</td>
+                <td class="note-cell" onclick="selectCell(this)">-</td>
+                <td class="note-cell" onclick="selectCell(this)">-</td>
+                <td class="note-cell" onclick="selectCell(this)">-</td>
+				<td>|</td>
+                <td class="note-cell" onclick="selectCell(this)">-</td>
+                <td class="note-cell" onclick="selectCell(this)">-</td>
+                <td class="note-cell" onclick="selectCell(this)">-</td>
+                <td class="note-cell" onclick="selectCell(this)">-</td>
+				<td>|</td>
+                <td class="note-cell" onclick="selectCell(this)">-</td>
+                <td class="note-cell" onclick="selectCell(this)">-</td>
+                <td class="note-cell" onclick="selectCell(this)">-</td>
+                <td class="note-cell" onclick="selectCell(this)">-</td>
+				<td>|</td>
+                <td class="note-cell" onclick="selectCell(this)">-</td>
+                <td class="note-cell" onclick="selectCell(this)">-</td>
+                <td class="note-cell" onclick="selectCell(this)">-</td>
+                <td class="note-cell" onclick="selectCell(this)">-</td>
+				<td>|</td>
+                <td class="note-cell" onclick="selectCell(this)">-</td>
+                <td class="note-cell" onclick="selectCell(this)">-</td>
+                <td class="note-cell" onclick="selectCell(this)">-</td>
+                <td class="note-cell" onclick="selectCell(this)">-</td>
+
+            </tr>
+            
+        </table>
+		</center><br><br>
+        <div class="note">
+            <button class="orange-btn" onclick="addNoteToCell('-')">-</button>
+			<button class="orange-btn" onclick="addNoteToCell('รฺ')">รฺ</button>
+			<button class="orange-btn" onclick="addNoteToCell('มฺ')">มฺ</button>
+            <button class="orange-btn" onclick="addNoteToCell('ฟฺ')">ฟฺ</button>
+            <button class="orange-btn" onclick="addNoteToCell('ซฺ')">ซฺ</button>
+            <button class="orange-btn" onclick="addNoteToCell('ลฺ')">ลฺ</button>
+            <button class="orange-btn" onclick="addNoteToCell('ทฺ')">ทฺ</button>
+            <button class="orange-btn" onclick="addNoteToCell('ด')">ด</button>
+            <button class="orange-btn" onclick="addNoteToCell('ร')">ร</button>
+            <button class="orange-btn" onclick="addNoteToCell('ม')">ม</button>
+			<button class="orange-btn" onclick="addNoteToCell('ฟ')">ฟ</button>
+            <button class="orange-btn" onclick="addNoteToCell('ซ')">ซ</button>
+            <button class="orange-btn" onclick="addNoteToCell('ล')">ล</button>
+            <button class="orange-btn" onclick="addNoteToCell('ท')">ท</button>
+            <button class="orange-btn" onclick="addNoteToCell('ดํ')">ดํ</button>
+            <button class="orange-btn" onclick="addNoteToCell('รํ')">รํ</button>
+			<button class="orange-btn" onclick="addNoteToCell('มํ')">มํ</button>
+            <button class="orange-btn" onclick="addNoteToCell('ฟํ')">ฟํ</button>
+			<button class="orange-btn" onclick="addNoteToCell('ซํ')">ซํ</button>
+			<button class="orange-btn" onclick="addNoteToCell('_')">_</button>
+
+
+        </div>
+        <button class="btn btn-play" onclick="playSequence()">เล่น</button>
+        <button class="btn btn-stop" onclick="stopSequence()">หยุด</button>
+        <button class="btn btn-add-row" onclick="addRow()">เพิ่มแถว</button>
+		<button class="btn btn-clear" onclick="addTon()">กลับต้น</button>
+        <button class="btn btn-delete-row" onclick="deleteRow()">ลบแถว</button>
+		<button class="btn btn-clear" onclick="confirmClear()">ล้างโน๊ต</button>
+
+
+<div id="tempoDialog" class="tempo-dialog">
+    <div class="tempo-dialog-content">
+       
+
+        <label for="tempoInput">กำหนดความเร็ว: </label>
+        <input type="number" id="tempoInput" value="120" min="1" max="300" step="1">
+        <button class="btn btn-confirm-tempo" onclick="confirmTempo()">Confirm</button>
+    </div>
+</div>
+<center><h3>นายพรเทพ มีสุข</h3></center>
+<br>
+
+<hr>
+<hr>
+</div>
+    </div>
+
+    <script>
+        var selectedCell = null;
+        var playing = false;
+        var timeoutIds = [];
+		var sequenceInterval; // เพิ่มตรงนี้
+        
+		function selectCell(cell) {
+            selectedCell = cell;
+        }
+
+
+
+		 function addNoteToCell(note) {
+			console.log('Note added:', note);
+            //console.log(note);
+             if (selectedCell) {
+                selectedCell.textContent = note;
+                playSound(note);
+            }// โค้ดสำหรับเพิ่มโน้ตในเซลล์
+        }
+
+        document.querySelectorAll('.orange-btn').forEach(button => {
+            button.addEventListener('mousedown', () => {
+                button.style.backgroundColor = 'darkorange';
+            });
+
+            button.addEventListener('mouseup', () => {
+                button.style.backgroundColor = 'orange';
+            });
+
+            button.addEventListener('mouseleave', () => {
+                button.style.backgroundColor = 'orange';
+            });
+        });
+
+        function playSound(note) {
+            var soundData = {
+                '-': 'sounds/0.mp3',
+				'ซํ': 'sounds/sol_high.mp3',
+				'ฟํ': 'sounds/fa_high.mp3',
+				'มํ': 'sounds/me_high.mp3',
+				'รํ': 'sounds/re_high.mp3',
+                'ดํ': 'sounds/do_high.mp3',
+				'ท': 'sounds/te.mp3',
+				'ล': 'sounds/la.mp3',
+				'ซ': 'sounds/sol.mp3',
+				'ฟ': 'sounds/fa.mp3',
+				'ม': 'sounds/me.mp3',
+				'ร': 'sounds/re.mp3',
+				'ด': 'sounds/do.mp3',
+				'ทฺ': 'sounds/te_low.mp3',
+				'ลฺ': 'sounds/la_low.mp3',
+				'ซฺ': 'sounds/sol_low.mp3',
+				'ฟฺ': 'sounds/fa_low.mp3',
+				'มฺ': 'sounds/me_low.mp3', 
+				'รฺ': 'sounds/re_low.mp3' 
+                
+            };
+
+            var audio = new Audio(soundData[note]);
+            audio.play();
+        }
+
+
+  
+        function stopSequence() {
+            playing = false;
+            timeoutIds.forEach(id => clearTimeout(id));
+            timeoutIds = [];
+        }
+
+        function clearTable() {
+            var cells = document.querySelectorAll('td.note-cell');
+            cells.forEach(cell => cell.textContent = '-');
+        }
+		function confirmClear() {
+			var confirmation = confirm("คุณแน่ใจหรือไม่ว่าต้องการลบข้อมูลทั้งหมด?");
+			if (confirmation) {
+				clearTable();
+			}
+		}
+
+        function addRow() {
+            var table = document.getElementById("myTable");
+            var rowCount = table.rows.length;
+            var newRow = table.insertRow(rowCount);
+            var groupClass = rowCount % 1 === 0 ? 'group1' : 'group2';// เปลี่ยน % 1 ตารางแถว
+            newRow.className = groupClass;
+
+            for (var i = 0; i < 4; i++) {
+                var newCell = newRow.insertCell(i);
+                newCell.className = 'note-cell';
+                newCell.setAttribute('onclick', 'selectCell(this)');
+                newCell.textContent = '-';
+            }
+
+            var separatorCell = newRow.insertCell(4);
+            separatorCell.textContent = '|';
+
+            for (var i = 5; i < 9; i++) {
+                var newCell = newRow.insertCell(i);
+                newCell.className = 'note-cell';
+                newCell.setAttribute('onclick', 'selectCell(this)');
+                newCell.textContent = '-';
+            }
+
+            var separatorCell2 = newRow.insertCell(9);
+            separatorCell2.textContent = '|';
+
+            for (var i = 10; i < 14; i++) {
+                var newCell = newRow.insertCell(i);
+                newCell.className = 'note-cell';
+                newCell.setAttribute('onclick', 'selectCell(this)');
+                newCell.textContent = '-';
+            }
+
+            var separatorCell3 = newRow.insertCell(14);
+            separatorCell3.textContent = '|';
+
+            for (var i = 15; i < 19; i++) {
+                var newCell = newRow.insertCell(i);
+                newCell.className = 'note-cell';
+                newCell.setAttribute('onclick', 'selectCell(this)');
+                newCell.textContent = '-';
+            }
+
+            var separatorCell4 = newRow.insertCell(19);
+            separatorCell4.textContent = '|';
+
+            for (var i = 20; i < 24; i++) {
+                var newCell = newRow.insertCell(i);
+                newCell.className = 'note-cell';
+                newCell.setAttribute('onclick', 'selectCell(this)');
+                newCell.textContent = '-';
+            }
+
+            var separatorCell5 = newRow.insertCell(24);
+            separatorCell5.textContent = '|';
+
+            for (var i = 25; i < 29; i++) {
+                var newCell = newRow.insertCell(i);
+                newCell.className = 'note-cell';
+                newCell.setAttribute('onclick', 'selectCell(this)');
+                newCell.textContent = '-';
+            }
+
+            var separatorCell6 = newRow.insertCell(29);
+            separatorCell6.textContent = '|';
+
+            for (var i = 30; i < 34; i++) {
+                var newCell = newRow.insertCell(i);
+                newCell.className = 'note-cell';
+                newCell.setAttribute('onclick', 'selectCell(this)');
+                newCell.textContent = '-';
+            }
+
+            var separatorCell7 = newRow.insertCell(34);
+            separatorCell7.textContent = '|';
+
+            for (var i = 35; i < 39; i++) {
+                var newCell = newRow.insertCell(i);
+                newCell.className = 'note-cell';
+                newCell.setAttribute('onclick', 'selectCell(this)');
+                newCell.textContent = '-';
+            }
+			button.style.backgroundColor = "orange"; // เปลี่ยนสีพื้นหลังเป็นสีส้ม
+        }
+
+function addTon() {
+    var table = document.getElementById("myTable");
+    var rowCount = table.rows.length;
+
+    // กำหนด class สำหรับ group1 และ group2 ตามแถว
+    var groupClass = rowCount % 2 === 0 ? 'group1' : 'group2'; // สลับ class group1 และ group2
+    var newRow = table.insertRow(rowCount);
+    newRow.className = groupClass;
+
+    // สร้างเซลล์เดียวในแถว และใช้ colspan ครอบคลุม 39 คอลัมน์
+    var singleCell = newRow.insertCell(0);
+    singleCell.className = 'single-cell'; // ใช้ class สำหรับควบคุม CSS
+    singleCell.setAttribute('colspan', '39');
+    singleCell.textContent = 'กลับต้น'; // ข้อความ "กลับต้น"
+
+    // เปลี่ยนสีปุ่มเมื่อกดเพิ่มแถว
+    var button = document.getElementById("addTonButton");
+    if (button) {
+        button.style.backgroundColor = "orange";
+    }
+}
+
+        function deleteRow() {
+            var table = document.getElementById("myTable");
+            var rowCount = table.rows.length;
+            if (rowCount > 1) {
+                table.deleteRow(rowCount - 1);
+            }
+			button.style.backgroundColor = "orange"; // เปลี่ยนสีพื้นหลังเป็นสีม่วง
+        }
+
+
+
+function playSequence() {
+    stopSequence(); // หยุดการเล่นก่อนหน้า
+    var delay = 30000 / tempoInput.value; // คำนวณ delay ตาม BPM
+    var allRows = document.querySelectorAll('#myTable tr'); // เลือกทุกแถวในตาราง
+
+    playing = true; // เปิดสถานะการเล่น
+    var currentIndex = 0; // ตำแหน่งแถวปัจจุบัน
+    var hasRepeated = false; // ใช้ตรวจสอบว่ามีการวนซ้ำหรือยัง
+
+    function playRow(rowIndex) {
+        if (!playing) return; // หากสถานะการเล่นปิดอยู่ ให้หยุดทันที
+
+        if (rowIndex >= allRows.length) return; // หยุดเมื่อถึงแถวสุดท้าย
+
+        var row = allRows[rowIndex];
+        var cells = row.cells;
+
+        if (row.textContent.trim() === "|") {
+            var skipRowTimeout = setTimeout(() => playRow(rowIndex + 1), 0); 
+            timeoutIds.push(skipRowTimeout);
+            return;
+        }
+
+        var cellDelay = 0;
+
+        for (let i = 0; i < cells.length; i++) {
+            let cell = cells[i];
+            let note = cell.textContent.trim();
+
+            if (note === "|") continue;
+
+            if (note === "") continue;
+
+            if (note === "กลับต้น") {
+                if (!hasRepeated) {
+                    hasRepeated = true; 
+                    var repeatTimeout = setTimeout(() => playRow(0), i * delay);
+                    timeoutIds.push(repeatTimeout);
+                    return;
+                } else {
+                    var nextRowTimeout = setTimeout(() => playRow(rowIndex + 1), cells.length * delay);
+                    timeoutIds.push(nextRowTimeout);
+                    return;
+                }
+            }
+
+            var playNoteTimeout = setTimeout(() => {
+                playSound(note);
+                cell.classList.add('playing');
+                setTimeout(() => {
+                    cell.classList.remove('playing');
+                }, delay - 10);
+            }, cellDelay);
+            timeoutIds.push(playNoteTimeout);
+
+            cellDelay += delay;
+        }
+
+        var nextRowTimeout = setTimeout(() => playRow(rowIndex + 1), cellDelay);
+        timeoutIds.push(nextRowTimeout);
+    }
+
+    playRow(currentIndex);
+}
+
+
+        function highlightCell(cell) {
+            cell.style.backgroundColor = "#ddd"; // เปลี่ยนสีพื้นหลังเซลล์
+        }
+
+        function unhighlightCell(cell) {
+            cell.style.backgroundColor = "ccc"; // กลับสีพื้นหลังเซลล์เป็นค่าเริ่มต้น
+        }
+ 
+
+
+    </script>
+</body>
+</html>
