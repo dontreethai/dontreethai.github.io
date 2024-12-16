@@ -238,7 +238,6 @@ th {
         <h2>โน๊ตดนตรีไทย</h2>
 		<br>
 		 <input type="text" name="firstname" value="กดตรงนี้พิมพ์ชื่อเพลง" class="btnpom">
- 
 <center>
         <table id="myTable">
             <tr class="group1">
@@ -281,9 +280,7 @@ th {
                 <td class="note-cell" onclick="selectCell(this)">-</td>
                 <td class="note-cell" onclick="selectCell(this)">-</td>
                 <td class="note-cell" onclick="selectCell(this)">-</td>
-
-            </tr>
-            
+            </tr>      
         </table>
 		</center><br><br>
         <div class="note">
